@@ -1,9 +1,13 @@
 // Jacob Leverich <leverich@stanford.edu>, 2011
-//
 // Memcached client for YCSB framework.
+//
+// Properties:
+//   memcached.server=memcached.xyz.com
+//   memcached.port=11211
 
 package com.yahoo.ycsb.db;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -18,10 +22,8 @@ import net.spy.memcached.internal.OperationFuture;
 
 public class Memcached extends com.yahoo.ycsb.DB
 {
-  public String server = "drink-7";
-  public int port = 11211;
-
   MemcachedClient client;
+  Properties props;
 
   public static final int OK = 0;
   public static final int ERROR = -1;
@@ -32,11 +34,20 @@ public class Memcached extends com.yahoo.ycsb.DB
    * there is one DB instance per client thread.
    */
   public void init() throws DBException {
+    props = getProperties();
+
+    String server = props.getProperty("memcached.server");
+    int port = 11211;
+
+    if (server == null)
+      throw new DBException("memcached.server param must be specified");
+
+    try { port = Integer.parseInt(props.getProperty("memcached.port")); }
+    catch (Exception e) {}
+
     try {
       client = new MemcachedClient(new InetSocketAddress(server, port));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    } catch (IOException e) { throw new DBException(e); }
   }
 
   /**
