@@ -72,7 +72,9 @@
 	
  	<target name="compile">
         <mkdir dir="${classes.dir}"/>
-        <javac includeantruntime="false" srcdir="${src.dir}" destdir="${classes.dir}" classpathref="build.classpath" deprecation="on">
+        <javac includeantruntime="false" srcdir="${src.dir}"
+               destdir="${classes.dir}" classpathref="build.classpath"
+               deprecation="on" debug="true">
           <compilerarg value="-Xlint:unchecked"/>
         </javac>
         <antcall target="makejar"/>
@@ -85,7 +87,9 @@
 	    </path>
 		
     	<mkdir dir="${classes.dir}"/>
-        <javac includeantruntime="false" srcdir="${db.dir}/src" destdir="${classes.dir}" classpathref="dbclasspath" deprecation="on">
+        <javac includeantruntime="false" srcdir="${db.dir}/src"
+               destdir="${classes.dir}" classpathref="dbclasspath"
+               deprecation="on" debug="true">
           <compilerarg value="-Xlint:unchecked"/>
         </javac>
         <antcall target="makejar"/>
